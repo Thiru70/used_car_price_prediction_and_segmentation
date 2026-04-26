@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}CarML — Predict Price{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">🔮 Price Prediction</h1>
+  <p class="page-subtitle">Enter your car's details below to get an instant AI price estimate and market segment.</p>
+</div>
+
+{% if error %}
+<div class="alert alert-warning">
+  ⚠️ {{ error }}
+  <a href="/train" class="btn btn-primary" style="margin-left:1rem;">Train Models</a>
+</div>
+{% endif %}
+
+<div class="predict-layout">
+
+  <!-- ── Input Form ──────────────────────────────────────────────── -->
+  <section class="predict-form-card">
+    <h2 class="card-title">🚗 Car Details</h2>
+    <form method="POST" action="/predict" id="predictForm">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="year">Manufacturing Year</label>
+          <input type="number" id="year" name="year" min="2000" max="2024"
+                 value="{{ result.input.Year if result else 2018 }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="brand">Brand</label>
+          <select id="brand" name="brand">
+            {% for b in ['Maruti','Hyundai','Honda','Toyota','Ford','Kia','Tata','MG','Volkswagen','Renault'] %}
+            <option value="{{ b }}" {% if result and result.input.Brand==b %}selected{% endif %}>{{ b }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fuel_type">Fuel Type</label>
+          <select id="fuel_type" name="fuel_type">
+            {% for f in ['Petrol','Diesel','CNG','Electric'] %}
+            <option value="{{ f }}" {% if result and result.input.Fuel_Type==f %}selected{% endif %}>{{ f }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="transmission">Transmission</label>
+          <select id="transmission" name="transmission">
+            <option value="Manual"    {% if result and result.input.Transmission=='Manual'    %}selected{% endif %}>Manual</option>
+            <option value="Automatic" {% if result and result.input.Transmission=='Automatic' %}selected{% endif %}>Automatic</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="owner">Owner Type</label>
+          <select id="owner" name="owner">
+            {% for o in ['First Owner','Second Owner','Third Owner','Fourth & Above Owner'] %}
+            <option value="{{ o }}" {% if result and result.input.Owner==o %}selected{% endif %}>{{ o }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="km_driven">KM Driven</label>
+          <input type="number" id="km_driven" name="km_driven" min="500" max="500000"
+                 value="{{ result.input.KM_Driven if result else 45000 }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="mileage">Mileage (km/l)</label>
+          <input type="number" id="mileage" name="mileage" step="0.1" min="5" max="40"
+                 value="{{ result.input.Mileage if result else 18.5 }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="engine">Engine (cc)</label>
+          <select id="engine" name="engine">
+            {% for e in [800,1000,1200,1500,1800,2000,2200,2500] %}
+            <option value="{{ e }}" {% if result and result.input.Engine==e %}selected{% endif %}>{{ e }} cc</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="max_power">Max Power (bhp)</label>
+          <input type="number" id="max_power" name="max_power" step="0.1" min="30" max="300"
+                 value="{{ result.input.Max_Power if result else 82.0 }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="seats">Seats</label>
+          <select id="seats" name="seats">
+            <option value="5" {% if result and result.input.Seats==5 %}selected{% endif %}>5</option>
+            <option value="7" {% if result and result.input.Seats==7 %}selected{% endif %}>7</option>
+            <option value="8" {% if result and result.input.Seats==8 %}selected{% endif %}>8</option>
+          </select>
+        </div>
+
+      </div><!-- /form-grid -->
+
+      <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+        🔮 Predict Price
+      </button>
+
+    </form>
+  </section>
+
+  <!-- ── Results Panel ───────────────────────────────────────────── -->
+  {% if result %}
+  <section class="results-panel">
+
+    <h2 class="card-title">💡 Prediction Results</h2>
+
+    <!-- Segment Badge -->
+    <div class="segment-badge segment-{{ result.segment.lower().replace(' ','-').replace('&','') }}">
+      {% if result.segment == 'Budget' %}💚
+      {% elif result.segment == 'Mid-Range' %}💜
+      {% else %}❤️{% endif %}
+      Market Segment: <strong>{{ result.segment }}</strong>
+    </div>
+
+    <!-- Consensus Price -->
+    <div class="consensus-price">
+      <div class="consensus-label">Consensus Estimate</div>
+      <div class="consensus-value">{{ result.avg_price }}</div>
+      <div class="consensus-sub">Average of all three models</div>
+    </div>
+
+    <!-- Per-model breakdown -->
+    <div class="model-breakdown">
+      <div class="breakdown-row">
+        <div class="breakdown-icon">🌲</div>
+        <div class="breakdown-name">Decision Tree</div>
+        <div class="breakdown-price">{{ result.dt_price }}</div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-icon">🌳</div>
+        <div class="breakdown-name">Random Forest</div>
+        <div class="breakdown-price">{{ result.rf_price }}</div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-icon">📍</div>
+        <div class="breakdown-name">KNN</div>
+        <div class="breakdown-price">{{ result.knn_price }}</div>
+      </div>
+    </div>
+
+    <a href="/analysis" class="btn btn-secondary btn-full" style="margin-top:1.5rem;">📊 View Analysis</a>
+
+  </section>
+  {% else %}
+  <section class="results-panel results-empty">
+    <div class="empty-icon">🔮</div>
+    <h3>Your prediction will appear here</h3>
+    <p>Fill in the car details on the left and click <strong>Predict Price</strong>.</p>
+  </section>
+  {% endif %}
+
+</div><!-- /predict-layout -->
+{% endblock %}

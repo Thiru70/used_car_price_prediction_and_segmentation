@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}CarML — Train Models{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">🚀 Model Training</h1>
+  <p class="page-subtitle">All four models are trained on your dataset and evaluated on a 20% holdout test set.</p>
+</div>
+
+{% if trained %}
+<!-- ── Metrics Table ─────────────────────────────────────────────── -->
+<section class="section">
+  <h2 class="section-title">📈 Model Performance</h2>
+  <div class="table-wrapper">
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Model</th>
+          <th>MAE (₹)</th>
+          <th>RMSE (₹)</th>
+          <th>R² Score</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr class="{% if loop.index0==0 %}row-best{% endif %}">
+          <td>
+            {% if loop.index0 == 0 %}🥇{% elif loop.index0 == 1 %}🥈{% else %}🥉{% endif %}
+          </td>
+          <td><strong>{{ r.model }}</strong></td>
+          <td>{{ "{:,.0f}".format(r.MAE) }}</td>
+          <td>{{ "{:,.0f}".format(r.RMSE) }}</td>
+          <td>
+            <div class="r2-bar-wrap">
+              <div class="r2-bar" style="width:{{ (r.R2 * 100)|round(1) }}%"></div>
+              <span>{{ r.R2 }}</span>
+            </div>
+          </td>
+          <td>
+            {% if r.R2 >= 0.85 %}
+              <span class="badge badge-green">Excellent</span>
+            {% elif r.R2 >= 0.70 %}
+              <span class="badge badge-blue">Good</span>
+            {% else %}
+              <span class="badge badge-yellow">Fair</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── Bar Chart ─────────────────────────────────────────────────── -->
+<section class="section">
+  <h2 class="section-title">📊 R² Score Comparison</h2>
+  <div class="chart-box">
+    <img src="data:image/png;base64,{{ chart }}" alt="Model Comparison Chart" class="chart-img" />
+  </div>
+</section>
+
+<!-- ── Info Cards ────────────────────────────────────────────────── -->
+<section class="section">
+  <h2 class="section-title">📚 Model Details</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🌲</div>
+      <h3>Decision Tree</h3>
+      <p>Splits data on the most informative features. Max depth = 8. Fast and interpretable.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌳</div>
+      <h3>Random Forest</h3>
+      <p>Ensemble of 100 trees. Reduces variance via bagging. Usually the strongest performer.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📍</div>
+      <h3>KNN (k=7)</h3>
+      <p>Predicts based on 7 nearest neighbours weighted by distance. Sensitive to scaling.</p>
+    </div>
+  </div>
+</section>
+
+<div class="cta-row">
+  <a href="/analysis" class="btn btn-primary">📊 View Analysis</a>
+  <a href="/predict"  class="btn btn-secondary">🔮 Make Prediction</a>
+</div>
+
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">⏳</div>
+  <h2>Training in Progress…</h2>
+  <p>Models are being trained. Please wait and refresh.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}CarML — Used Car Price Predictor{% endblock %}</title>
+  <meta name="description"
+    content="AI-powered used car price prediction and market segmentation using Machine Learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ── Navigation ───────────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon"></span>
+      <span class="brand-text">Car<span class="accent">ML</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link {% if request.path=='/' %}active{% endif %}">Home</a></li>
+      <li><a href="/train" class="nav-link {% if request.path=='/train' %}active{% endif %}">Train</a></li>
+      <li><a href="/analysis" class="nav-link {% if request.path=='/analysis' %}active{% endif %}">Analysis</a></li>
+      <li><a href="/history" class="nav-link {% if request.path=='/history' %}active{% endif %}">History</a></li>
+      <li><a href="/predict" class="nav-link {% if request.path=='/predict' %}active{% endif %}">
+          <span class="btn-pill">Predict</span>
+        </a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Page Content ─────────────────────────────────────────────── -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>Built with <span class="accent">Flask</span> · scikit-learn · matplotlib · seaborn</p>
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}CarML — Analysis{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">ML <span class="gradient-text">Dashboard</span></h1>
+  <p class="page-subtitle">Interactive visualization of model logic and data patterns.</p>
+</div>
+
+{% if error %}
+<div class="empty-state">
+  <div class="empty-icon">📂</div>
+  <h2>No Data Yet</h2>
+  <p>{{ error }}</p>
+  <a href="/train" class="btn btn-primary">Train Models Now</a>
+</div>
+{% else %}
+
+<div class="dashboard-grid">
+  <!-- 1. K-Means / Clustering -->
+  <div class="dashboard-card" id="kmeans-card">
+    <div class="card-header">
+      <div class="header-main">
+        <h3>Market Segmentation (K-Means)</h3>
+        <p>Unsupervised grouping of cars based on feature patterns.</p>
+      </div>
+      <div class="zoom-controls">
+        <button class="btn-icon" onclick="resetZoom('kmeans-chart')" title="Reset Zoom">⟲</button>
+      </div>
+    </div>
+    <div class="viz-container">
+      <canvas id="kmeans-chart"></canvas>
+    </div>
+    <div class="card-footer">
+      <div class="legend-simple">
+        <span class="legend-item"><span class="dot budget"></span> Budget</span>
+        <span class="legend-item"><span class="dot mid"></span> Mid-Range</span>
+        <span class="legend-item"><span class="dot premium"></span> Premium</span>
+      </div>
+      <div class="tooltip-info">Interactive 2D PCA Projection</div>
+    </div>
+  </div>
+
+  <!-- 2. KNN / Classification -->
+  <div class="dashboard-card" id="knn-card">
+    <div class="card-header">
+      <div class="header-main">
+        <h3>Price Classification (K-NN)</h3>
+        <p>Predicting price categories based on similar "neighbor" cars.</p>
+      </div>
+      <div class="zoom-controls">
+        <button class="btn-icon" onclick="resetZoom('knn-chart')" title="Reset Zoom">⟲</button>
+      </div>
+    </div>
+    <div class="viz-container">
+      <canvas id="knn-chart"></canvas>
+    </div>
+    <div class="card-footer">
+      <p class="beginner-text">Points are colored by category. Clusters show decision boundaries.</p>
+    </div>
+  </div>
+
+  <!-- 3. Decision Tree / Logic -->
+  <div class="dashboard-card full-width" id="dt-card">
+    <div class="card-header">
+      <div class="header-main">
+        <h3>Logic Path (Decision Tree)</h3>
+        <p>The step-by-step logic used to estimate car value.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary btn-sm" id="grow-tree">Grow Tree 🌿</button>
+        <button class="btn-icon" id="reset-tree" title="Reset View">⟲</button>
+      </div>
+    </div>
+    <div class="viz-container svg-viz" id="tree-viz">
+      <!-- D3 SVG goes here -->
+    </div>
+    <div class="card-footer">
+      <p class="beginner-text">Each node is a split (e.g. "Year > 2015?"). Follow the paths to see predictions.</p>
+    </div>
+  </div>
+
+  <!-- 4. Random Forest / Ensemble -->
+  <div class="dashboard-card full-width" id="rf-card">
+    <div class="card-header">
+      <div class="header-main">
+        <h3>The Forest Effect (Random Forest)</h3>
+        <p>Multiple trees working together to minimize individual errors.</p>
+      </div>
+      <button class="btn-icon" id="reset-forest" title="Reset View">⟲</button>
+    </div>
+    <div class="viz-container svg-viz" id="forest-viz">
+      <!-- D3 SVG for layered forest goes here -->
+    </div>
+    <div class="card-footer">
+      <p class="beginner-text">The "forest" combines many trees for a more robust and stable final prediction.</p>
+    </div>
+  </div>
+</div>
+
+<div class="cta-row">
+  <a href="/predict" class="btn btn-primary">Predict Price</a>
+  <a href="/train" class="btn btn-secondary">Re-Train</a>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endif %}
+{% endblock %}

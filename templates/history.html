@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}History — CarML{% endblock %}
+
+{% block content %}
+<section class="section-container">
+    <div class="section-header">
+        <h1>Prediction <span class="accent">History</span></h1>
+        <p>Recent used car price predictions saved to Supabase.</p>
+    </div>
+
+    <div class="card history-card">
+        {% if history %}
+        <div class="table-container">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Car Details</th>
+                        <th>Mileage / Engine</th>
+                        <th>Predicted Price</th>
+                        <th>Segment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in history %}
+                    <tr>
+                        <td class="date-cell">
+                            {{ entry.created_at[:10] }}
+                            <span class="timestamp">{{ entry.created_at[11:16] }}</span>
+                        </td>
+                        <td>
+                            <div class="car-info">
+                                <span class="car-brand">{{ entry.brand }}</span>
+                                <span class="car-year">{{ entry.year }}</span>
+                                <div class="car-meta">
+                                    {{ entry.fuel_type }} · {{ entry.transmission }} · {{ entry.owner }}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="specs">
+                                <span>{{ entry.mileage }} kmpl</span>
+                                <span>{{ entry.engine }} cc</span>
+                                <span>{{ entry.km_driven | int }} km</span>
+                            </div>
+                        </td>
+                        <td class="price-cell">
+                            ₹ {{ "{:,.0f}".format(entry.predicted_price) }}
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ entry.segment.lower().replace(' ', '-') }}">
+                                {{ entry.segment }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No predictions found in history. Try predicting a car price first!</p>
+            <a href="/predict" class="btn-pill">Go to Predict</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    .section-container {
+        padding: 3.5rem 0 2rem;
+    }
+    .section-header {
+        margin-bottom: 2.5rem;
+    }
+    .section-header h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+    .section-header p {
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        font-size: 1rem;
+    }
+    .history-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+    .table-container {
+        overflow-x: auto;
+    }
+    .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: var(--text);
+    }
+    .history-table th, .history-table td {
+        padding: 1.25rem 1.5rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+    .history-table th {
+        background: var(--bg-card2);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+    }
+    .date-cell {
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+    .timestamp {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+    .car-brand {
+        display: block;
+        font-weight: 700;
+        color: var(--accent);
+    }
+    .car-year {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+    .car-meta {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+    .specs span {
+        display: block;
+        font-size: 0.85rem;
+    }
+    .price-cell {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: var(--text);
+    }
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    .badge-budget { background: rgba(0, 212, 170, 0.1); color: #00D4AA; border: 1px solid rgba(0, 212, 170, 0.3); }
+    .badge-mid-range { background: rgba(108, 99, 255, 0.1); color: var(--accent); border: 1px solid rgba(108, 99, 255, 0.3); }
+    .badge-premium { background: rgba(255, 107, 107, 0.1); color: #FF6B6B; border: 1px solid rgba(255, 107, 107, 0.3); }
+    
+    .empty-state {
+        padding: 5rem 2rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+</style>
+{% endblock %}

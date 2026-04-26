@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}CarML — Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="badge">🤖 Machine Learning Project</div>
+    <h1 class="hero-title">Used Car Price<br /><span class="gradient-text">Prediction & Segmentation</span></h1>
+    <p class="hero-subtitle">
+      Harness the power of <strong>Decision Trees</strong>, <strong>Random Forest</strong>,
+      <strong>KNN</strong>, and <strong>K-Means Clustering</strong> to predict
+      used car prices and segment the market intelligently.
+    </p>
+    <div class="hero-actions">
+      <a href="/train" class="btn btn-primary">🚀 Train Models</a>
+      <a href="/predict" class="btn btn-secondary">🔮 Make Prediction</a>
+    </div>
+  </div>
+  <div class="hero-graphic">
+    <div class="stat-card floating" style="--delay:0s">
+      <div class="stat-icon">🌲</div>
+      <div class="stat-label">Decision Tree</div>
+    </div>
+    <div class="stat-card floating" style="--delay:0.3s">
+      <div class="stat-icon">🌳</div>
+      <div class="stat-label">Random Forest</div>
+    </div>
+    <div class="stat-card floating" style="--delay:0.6s">
+      <div class="stat-icon">📍</div>
+      <div class="stat-label">KNN</div>
+    </div>
+    <div class="stat-card floating" style="--delay:0.9s">
+      <div class="stat-icon">🔵</div>
+      <div class="stat-label">K-Means</div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Grid -->
+<section class="section">
+  <h2 class="section-title">How It Works</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📂</div>
+      <h3>Load Dataset</h3>
+      <p>Real-world used car data with Year, Brand, Fuel Type, Mileage, Engine, and more.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚙️</div>
+      <h3>Preprocess</h3>
+      <p>Handle missing values, encode categories, and scale features for optimal model performance.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <h3>Train Models</h3>
+      <p>Decision Tree, Random Forest, and KNN regressors trained simultaneously with metrics.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Visualise</h3>
+      <p>Interactive charts: price trends, correlation heatmap, and market cluster scatter plots.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"></div>
+      <h3>Predict</h3>
+      <p>Enter car specs and get instant price estimates from all three models with a consensus.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏷️</div>
+      <h3>Segment</h3>
+      <p>K-Means automatically categorises your car as Budget, Mid-Range, or Premium.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Pipeline Steps -->
+<section class="section">
+  <h2 class="section-title">Project Pipeline</h2>
+  <div class="pipeline">
+    <div class="pipe-step"><span class="pipe-num">1</span><span>Load CSV</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step"><span class="pipe-num">2</span><span>Clean & Encode</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step"><span class="pipe-num">3</span><span>Scale</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step"><span class="pipe-num">4</span><span>Train Models</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step"><span class="pipe-num">5</span><span>Evaluate</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step"><span class="pipe-num">6</span><span>Predict</span></div>
+  </div>
+</section>
+{% endblock %}
