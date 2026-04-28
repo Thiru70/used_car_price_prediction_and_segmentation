@@ -3,7 +3,10 @@ name: Train Model
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * 0"  # weekly
+    - cron: "0 0 * * 0"
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   train:
